@@ -1,4 +1,4 @@
-const hostLink = "https://crm-api-gold.vercel.app/"
+const hostLink = "https://crm-api-gold.vercel.app"
 
 const registerNewUserLink = `${hostLink}/auth/newUser`;
 const signinLink = `${hostLink}/auth/signin`;
