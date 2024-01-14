@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@200;300&family=Raleway:wght@300&display=swap");
+:root {
+  --background-color: #f1f6ff;
+  --card-color: rgb(38, 38, 38);
+  --font-color: white;
+  --heading-color: black;
+  --font-family: "Poppins", sans-serif;
+  --heading-font-family: "Merriweather", serif;
+  --blue-color: rgb(30, 30, 247);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  font-family: var(--font-family) !important;
+}
+
+.loginContainerOuter {
+  background-color: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  width: 30vw !important;
+  padding: 3rem 1rem;
+}
+.loginContainerInner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.loginHeading {
+  color: var(--heading-color);
+  font-family: var(--heading-font-family) !important;
+  /* font-size: 3rem; */
+}
+.loginButton {
+  font-size: 1.2rem !important;
+  width: max-content !important;
+}
+
+/* user Dashboard */
+.userDashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  min-height: 100vh;
+}
+.userDashboardFrontRow{
+  background-color: #3a3a3a;
+  width: 100%;
+}
+.userDashBoardFrontRowForm{
+  background-color: #3a3a3a;
+}
+.userDashboardSelector {
+  height: 3rem;
+  font-size: 1.3rem;
+  padding: 0 2rem;
+  outline: none;
+  border: 0;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  background-color: #707070;
+  color: #F1EFEF;
+  box-shadow: inset 0px 0px 3px 150px rgba(83, 83, 83, 0.461);
+}
+.userDashboardSearchDiv {
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+}
+.userDashboardSearchBar {
+  width: 60%;
+  font-size: 1.2rem;
+  outline: none;
+  border: 0;
+  border-bottom: 2px solid var(--blue-color);
+  color: var(--blue-color);
+  padding: 0 20px;
+}
+.userDashboardAudiosContainer{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: auto;
+  scroll-behavior: smooth;
+  height: calc(100vh - 2rem);
+}
+
+/* audioCard */
+
+.audioCard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1.5px solid white;
+  height: 250px;
+  width: 250px;
+  border-radius: 5px;
+  box-shadow: white 0px 1px 3px;
+  transition: transform 0.5s ease-in-out;
+  padding: 2rem 1rem;
+  gap: 1.5rem;
+  margin: 1.8rem;
+  background-color: #3a3a3a;
+}
+.audioCard:hover {
+  transform: scale(1.1);
+}
+.progress {
+  /* -webkit-appearance: none; */
+  width: 100%;
+  height: 4px;
+  background-color: #F1EFEF;
+  border-radius: 1px;
+  cursor: pointer;
+  /* box-shadow: var(--blue-color) 0px 1px 3px, var(--blue-color) 0px 1px 2px; */
+}
+.progress::-webkit-slider-thumb {
+  /* -webkit-appearance: none; */
+  height: 30px;
+  width: 30px;
+  border: 8px solid #f1f6ff;
+  background-color: #F1EFEF;
+}
+.progress::-moz-range-thumb {
+  /* -webkit-appearance: none; */
+  height: 10px;
+  width: 10px;
+  border: 3px solid var(--font-color);
+  border-radius: 50%;
+  background-color: var(--blue-color);
+  box-shadow: var(--background-color) 0px 1px 3px, var(--background-color) 0px 1px 2px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+}
+#audioPlayButton,
+#audioPauseButton {
+  height: 50px !important;
+  width: 50px !important;
+  color: #f1f6ff;
+}
