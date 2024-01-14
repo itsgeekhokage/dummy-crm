@@ -14,7 +14,7 @@ connectdb(DATABASE_URL);
 
 
 app.use(cors({
-            origin : ["https://crm-client-navy.vercel.app/"],
+            origin : ["https://crm-client-navy.vercel.app"],
             methods : ["GET", "POST", "DELETE", "PUT"],
             credentials : true
         }        
