@@ -2,25 +2,28 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const NavbarContainer = styled.nav`
   background-color: #333;
   color: #fff;
-  padding: 10px;
+  padding: 10px 3rem;
   width: 100vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   ul {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    align-items: center;
     list-style: none;
   }
 
   li {
     position: relative;
     width: 150px;
+    cursor: pointer;
   }
 
   a {
@@ -56,7 +59,7 @@ const DropdownWrapper = styled.li`
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const navigate = useNavigate();
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -83,6 +86,7 @@ const Navbar = () => {
             </DropdownContent>
           )}
         </DropdownWrapper>
+        <LogoutIcon style={{cursor: "pointer"}} onClick={()=> navigate('/')}/>
       </ul>
     </NavbarContainer>
   );

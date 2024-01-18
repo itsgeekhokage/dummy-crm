@@ -101,6 +101,7 @@ const CreateUser = () => {
       e.preventDefault();
       if (userName.length == 0 || password.length == 0)
         setErrorMessage("Fields cannot be kept empty...");
+      // else if(userName.includes(" ")) setErrorMessage("Seems like your are using WhiteSpaces in between, avoid using them...")
       else createUser();
     };
 

@@ -66,6 +66,7 @@ const StyledSelect = styled.select`
   font-size: 1.2rem;
   padding: 2px 8px;
   background-color: var(--background-color);
+  cursor: pointer;
 `;
 
 const SelectedProject = styled.div`
@@ -80,24 +81,24 @@ const SelectedProject = styled.div`
     margin: 0;
     width: max-content;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     background-color: var(--background-color);
     font-size: 1.4rem;
     margin: 0.8rem 0;
     padding: 0.8rem 1rem;
     border-radius: 4px;
-    width: 250px;
     div {
       margin: 0;
       padding: 0;
       display: flex;
-      justify-content: center;
       font-size: 1rem;
       min-width: 40px;
       span {
         width: 30px;
-        margin-right: 10px;
+        margin: 0 10px;
         text-align: center;
+        background-color: #d2d1d1;
+        border-radius: 3px;
       }
     }
   }
@@ -119,11 +120,13 @@ const SingleUser = () => {
 
   useEffect(() => {
     console.log(location.state);
-    setUserId(location.state._id);
-    setUserName(location.state.userName);
-    setPassword(location.state.password);
-    setStatus(location.state.status);
-    setAssignedProject(location.state.assignedProject);
+    if (location.state) {
+      setUserId(location.state._id);
+      setUserName(location.state.userName);
+      setPassword(location.state.password);
+      setStatus(location.state.status);
+      setAssignedProject(location.state.assignedProject);
+    }
   }, [location]);
 
   // to load pre-assigned project in selected projects
@@ -134,7 +137,6 @@ const SingleUser = () => {
 
     setSelectedProjects(newList);
   }, [assignedProject, projectlist]);
-
 
   const optionSetter = () => {
     console.log("list", projectlist);
@@ -169,6 +171,7 @@ const SingleUser = () => {
   useEffect(() => {
     optionSetter();
   }, [projectlist]);
+
   const handleStatusChange = () => {
     // Handle project selection here if needed
   };
@@ -206,22 +209,27 @@ const SingleUser = () => {
         console.error("Fetch error:", error);
       });
   };
- const handleAddProject = (e) => {
-   e.preventDefault();
-   const isProjectSelected = selectedProjects.some(
-     (item) => item.projectName === selectedOption
-   );
+  const handleAddProject = (e) => {
+    e.preventDefault();
+    const isProjectSelected = selectedProjects.some(
+      (item) => item.projectName === selectedOption
+    );
 
-   if (!isProjectSelected) {
-     const project = projectlist.find(
-       (proj) => proj.projectName === selectedOption)._id;
+    if (!isProjectSelected) {
+      const project = projectlist.find(
+        (proj) => proj.projectName === selectedOption
+      )._id;
 
-     setAssignedProject((prevAssignedProject) => [
-       ...prevAssignedProject,
-       { project, extraCount: 0 },
-     ]);
-   }
- };
+      setAssignedProject((prevAssignedProject) => [
+        ...prevAssignedProject,
+        { project, extraCount: 0 },
+      ]);
+    }
+    else{
+      alert("already added!")
+    }
+    console.log(assignedProject, "ass")
+  };
 
   const handleOptionChange = (e) => {
     setSelectedOption(e);
@@ -234,7 +242,7 @@ const SingleUser = () => {
     updateUser();
   };
   const calculateCount = (id) => {
-    return (assignedProject.find(item => item.project === id))?.extraCount;
+    return assignedProject.find((item) => item.project === id)?.extraCount;
   };
 
   const extraCountHandler = (id) => {
@@ -245,10 +253,10 @@ const SingleUser = () => {
   };
 
   const deleteProjectHandler = (key) => {
-    console.log(key, assignedProject)
-    const newlist = assignedProject.filter(item => item.project !== key);
+    console.log(key, assignedProject);
+    const newlist = assignedProject.filter((item) => item.project !== key);
     setAssignedProject(newlist);
-  }
+  };
   return (
     <>
       <StyledForm>
@@ -326,9 +334,11 @@ const SingleUser = () => {
                 <div>
                   <div>{item?.projectName}</div>
                   <div>
-                    <span>{calculateCount(item?._id) }</span>
+                    <span>{calculateCount(item?._id)}</span>
                     <Edit onClick={() => extraCountHandler(item._id)} />
-                    <DeleteIcon onClick={()=> deleteProjectHandler(item._id)}/>
+                    <DeleteIcon
+                      onClick={() => deleteProjectHandler(item._id)}
+                    />
                   </div>
                 </div>
               );

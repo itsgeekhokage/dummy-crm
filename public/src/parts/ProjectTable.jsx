@@ -58,11 +58,10 @@ const StyledDataCell = styled.td`
 
 const ProjectTable = ({ headers, setHeaders, audioFiles }) => {
   console.log(headers, audioFiles);
-  const [editedHeaders, setEditedHeaders] = useState({});
-
+  const [editedHeaders, setEditedHeaders] = useState(headers);
   const filteredKeys = Object.keys(headers).filter(
     (key) => key !== "_id" && key !== "__v"
-  );
+    );
 
   const handleStatus = (key) => {
     setHeaders((prevHeaders) => ({
@@ -74,16 +73,8 @@ const ProjectTable = ({ headers, setHeaders, audioFiles }) => {
     }));
   };
 
-  const handleHeaderEdit = (key) => {
-    if (editedHeaders[key] !== undefined && editedHeaders[key].trim() !== "") {
-      const newHeaders = { ...headers };
-      newHeaders[key].nickName = editedHeaders[key];
-      setHeaders(newHeaders);
-    }
-  };
-
   const handleInputChange = (key, value) => {
-    setEditedHeaders((prev) => ({ ...prev, [key]: value }));
+    setHeaders((prev) => ({ ...prev, [key]: {status : prev[key].status, nickName : value} }));
   };
 
   useEffect(() => {
@@ -99,9 +90,8 @@ const ProjectTable = ({ headers, setHeaders, audioFiles }) => {
               <StyledHeaderCell key={key}>
                 <StyledInput
                   type="text"
-                  value={editedHeaders[key]}
+                  value={headers[key].nickName}
                   onChange={(e) => handleInputChange(key, e.target.value)}
-                  onBlur={() => handleHeaderEdit(key)}
                   placeholder="Edit header"
                 />
               </StyledHeaderCell>

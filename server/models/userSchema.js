@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
             extraCount: { type: Number, default: 0 }
         }
     ],
-    logins: [String],
+    logins: [{ip : String, lastLogin : String, lastLocation : String}],
     audioPlayed: [String]
 })
 

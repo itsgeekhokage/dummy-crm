@@ -7,7 +7,6 @@ import SingleUser from "./SingleUser";
 import AllUsers from "./AllUsers";
 import CreateProject from "./CreateProject";
 import AllProjects from "./AllProjects";
-import Modal from "../parts/Modal";
 import CsvToJsonConverter from "./TestPage";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
@@ -25,7 +24,8 @@ const AdminPanel = () => {
     setModalVisible(true);
   };
   useEffect(()=>{
-    console.log(location.state)
+    const user = JSON.parse(sessionStorage.getItem("crmLogin"));
+    if(location?.state === null) location.state = user;
     if(location?.state?.admin != true) navigate("/");
   },[])
   return (

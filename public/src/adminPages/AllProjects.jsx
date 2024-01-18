@@ -122,7 +122,7 @@ const AllProjects = () => {
               recreate
             </div>
           )}
-          {sampleList.length &&
+          {sampleList.length ?
             sampleList.map((item, index) => (
               <div key={index}>
                 <span>{item.projectName}</span>
@@ -135,14 +135,17 @@ const AllProjects = () => {
                     style={{ color: "#d88511", margin: "0 5px" }}
                   /> */}
                   <DriveFileRenameOutlineTwoToneIcon
+
                     onClick={() =>
                       navigate("../createProject", { state: item })
                     }
-                    style={{ color: "#2b412b", margin: "0 5px" }}
+                    style={{ color: "#2b412b", margin: "0 5px", cursor: "pointer" }}
                   />
                 </span>
               </div>
-            ))}
+            )):
+            <div> loading...</div>
+            }
         </Container>
       </div>
     </Dashboard>

@@ -88,6 +88,7 @@ const FileUploadContainer = styled.div`
   align-items: center;
   gap: 10px;
   padding-left: 15px;
+  cursor: pointer;
 `;
 const FileActionButton = styled.div`
   background-color: var(--heading-color);
@@ -146,6 +147,7 @@ const CreateProject = () => {
     },
   ];
   const [csvTableData, setcsvTableData] = useState([]);
+
   useEffect(() => {
     let { _id, projectName, status, audioFiles, headers, deadline, limit } =
       location.state;
@@ -157,21 +159,48 @@ const CreateProject = () => {
     setDeadline(deadline);
     setHeaders(headers);
     setAudioFiles(audioFiles);
-    setcsvTableData(audioFiles);
+    console.log(audioFiles);
+    const transformedData = audioFiles?.map(item => {
+      if(item){
+        const {_id, project, __v, ...rest} = item;
+        const comments = item.comments?.map(comment => `${comment.userName} : ${comment.comment}`).join('\n');
+        const plays = item.plays?.map(play => `${play.userName} : ${play.plays}`).join('\n');
+        return {...rest, comments, plays};
+      }
+    })
+    setcsvTableData(transformedData);
   }, []);
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      Papa.parse(file, {
-        complete: (result) => {
-          const jsonData = result.data;
+
+    Papa.parse(file, {
+      complete: (result) => {
+        const parsedHeaders = result.data[0].map((header) => header.trim());
+        const parsedValues = result.data
+          .slice(1)
+          .map((row) => row.map((value) => value.trim()));
+
+        if(JSON.stringify(Object.keys(csvSampleData[0])) == JSON.stringify(parsedHeaders)) {
+          const jsonData = parsedValues.map((row) => {
+            const obj = {};
+            parsedHeaders.forEach((header, index) => {
+              obj[header] = row[index];
+            });
+            return obj;
+          });
+
           setJsonResult(jsonData);
-        },
-        header: true,
-      });
-    }
-  };
+        }
+        else {
+          alert("plss re-check your input file headers according to CSV Sample file...")
+        }
+      },
+      header: false,
+    });
+  }
+
   const appendHandler = () => {
     console.log("here");
     const postData = {
@@ -192,16 +221,24 @@ const CreateProject = () => {
         return response.json();
       })
       .then((data) => {
-        setAudioFiles(data.files);
-        setcsvTableData(data.files);
-        if (data.count != 0)
+        if(data.response === 202){
+          setAudioFiles(data.files);
+          setcsvTableData(data.files);
+          if (data.count != 0)
           alert(`Data successfully updated! ${jsonResult.lengh - data.count} duplicates Trimmed`);
+        else alert("Data successfully updated...")
+      }
+      else {
+        alert("Internal Server Error, try reconsidering your data, or come back later...")
+      }
         console.log(data);
       })
       .catch((error) => {
         console.error("Fetch error:", error);
       });
   };
+
+  
   const replaceHandler = () => {
     if (jsonResult === null)
       alert("data is null, check once or try re-entering...");
@@ -224,10 +261,13 @@ const CreateProject = () => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
-          setAudioFiles(data.newAudioModels, () => {
-            setcsvTableData(data.newAudioModels);
-          });
+          if(data.response === 202){
+            alert("data successfully replaced...");
+            setAudioFiles(data.newAudioModels, () => {
+              setcsvTableData(data.newAudioModels);
+            });
+          }
+          else alert("Server problem, try reconsidering your data or come back later...")
         })
         .catch((error) => {
           console.error("Fetch error:", error);
@@ -336,6 +376,7 @@ const CreateProject = () => {
             <input
               type="file"
               onChange={handleFileChange}
+
             />
             {audioFiles.length === 0 && (
               <FileActionButton onClick={() => replaceHandler()}>

@@ -2,10 +2,12 @@ import userModel from "../models/userSchema.js";
 
 const getAllUsers = async (req, res) => {
     try {
-        const allUsers = await userModel.find();
-        res.json({allUsers})
+        let allUsers = await userModel.find();
+        allUsers = allUsers.filter(user => user.admin !== true);
+        res.json({allUsers, response : 202})
     } catch (error) {
         console.log(error);
+        res.json({message : "Internal Server Error", response : 404})
     }
 }
 const updateUser = async (req, res) => {
