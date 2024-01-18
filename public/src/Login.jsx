@@ -48,11 +48,28 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   const navigator = (data) => {
-    console.log("navigation", data);
-    if(data?.user.admin === true) navigate("/admin/allUser", {state : data.user})
+    sessionStorage.setItem("crmLogin", JSON.stringify(data));
+    if(data?.admin === true) navigate("/admin/allUser", {state : data})
     // else if(data?.admin === false) navigate("/home", {state : data});
-    else navigate("/home", {state : data.user});
+    else {data?.status === "Active" ? navigate("/home", {state : data}) : setErrorMessage("Seems like you are not allowed to access this database, try contacting the admin...")}
   }
+
+  function decodeJwt(token) {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+
+    return JSON.parse(jsonPayload).user._doc;
+  }
+
+
   const authChecker = () => {
     const postData = {
       userName,
@@ -72,7 +89,10 @@ const UserLogin = () => {
         return response.json();
       })
       .then((data) => {
-        if(data.response === 202) navigator(data);
+        console.log(data)
+        let userToken = decodeJwt(data.token);
+        console.log(userToken)
+        if(data.response === 202) navigator(userToken);
         else alert("Authentication failed, kindly enter correct userId or password");
       })
       .catch((error) => {

@@ -103,7 +103,7 @@ const replaceAudios = async (req, res) => {
         // Step 6: Save the project
         await project.save();
 
-        res.json({ response: "Audios replaced successfully", newAudioModels });
+        res.json({ response : 202, message: "Audios replaced successfully", newAudioModels });
     } catch (error) {
         console.log(error);
         res.status(500).json({ response: "Internal Server Error" });
@@ -136,7 +136,7 @@ const appendAudios = async (req, res) => {
             }
         }
         await project.save();
-        res.json({ files : existingAudioModels, count });
+        res.json({ files : existingAudioModels, count, response : 202 });
     } catch (error) {
         console.log(error)
         res.json({ error: error })

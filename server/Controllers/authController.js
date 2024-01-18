@@ -1,4 +1,5 @@
 import userModel from "../models/userSchema.js";
+import jwt from "jsonwebtoken"
 
 const registerNewUser = async (req, res) => {
     const { userName, password } = req.body;
@@ -19,11 +20,18 @@ const getUser = async (req, res) => {
     try {
         const { userName, password } = req.body;
         const user = await userModel.findOne({ userName });
-        if(user) res.json({user, response : 202});
-        else res.json({response : 404});
+
+        if (user && password === user.password) {
+            user.password = "";
+            const token = jwt.sign({ user: { ...user } }, '@crm#abb', { expiresIn: '1h' });
+            res.json({token, response: 202 });
+        } else {
+            res.json({ response: 404 });
+        }
     } catch (error) {
-        res.json({message : "Internal Server Error", response : 404})
+        console.error(error);
+        res.json({ message: "Internal Server Error", response: 500 });
     }
-}
+};
 
 export { registerNewUser, getUser }

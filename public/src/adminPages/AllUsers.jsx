@@ -85,8 +85,15 @@ const AllUsers = () => {
         return response.json();
       })
       .then((data) => {
-        setUserList(data.allUsers);
-        setSampleList(data.allUsers);
+        console.log(data.allUsers)
+        const statusOrder = { Inactive: 1, Active: 0 };
+         data = [...data.allUsers].sort((a, b) => {
+           const statusA = statusOrder[a["status"]];
+           const statusB = statusOrder[b["status"]];
+           return statusA - statusB;
+         });
+        setUserList(data);
+        setSampleList(data);
       })
       .catch((error) => {
         console.error("Fetch error:", error);
@@ -145,9 +152,9 @@ const AllUsers = () => {
             <span>Audio Played</span>
             <span>Commands</span>
           </div>
-          {sampleList.map((item) => {
+          {sampleList.map((item, index) => {
             return (
-              <div>
+              <div key={index}>
                 <span>{item.userName}</span>
                 <span>{item.password}</span>
                 <span>{item.status}</span>
