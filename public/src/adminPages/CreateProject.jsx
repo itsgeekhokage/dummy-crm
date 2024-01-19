@@ -149,26 +149,29 @@ const CreateProject = () => {
   const [csvTableData, setcsvTableData] = useState([]);
 
   useEffect(() => {
-    let { _id, projectName, status, audioFiles, headers, deadline, limit } =
+    if(location.state){
+      let { _id, projectName, status, audioFiles, headers, deadline, limit } =
       location.state;
-    deadline = deadline.slice(0, 10);
-    setProjectId(_id);
-    setProjectName(projectName);
-    setStatus(status);
-    setLimit(limit);
-    setDeadline(deadline);
-    setHeaders(headers);
-    setAudioFiles(audioFiles);
-    console.log(audioFiles);
-    const transformedData = audioFiles?.map(item => {
-      if(item){
-        const {_id, project, __v, ...rest} = item;
-        const comments = item.comments?.map(comment => `${comment.userName} : ${comment.comment}`).join('\n');
-        const plays = item.plays?.map(play => `${play.userName} : ${play.plays}`).join('\n');
-        return {...rest, comments, plays};
-      }
-    })
-    setcsvTableData(transformedData);
+      deadline = deadline.slice(0, 10);
+      setProjectId(_id);
+      setProjectName(projectName);
+      setStatus(status);
+      setLimit(limit);
+      setDeadline(deadline);
+      setHeaders(headers);
+      setAudioFiles(audioFiles);
+      console.log(audioFiles);
+      const transformedData = audioFiles?.map(item => {
+        if(item){
+          const {_id, project, __v, ...rest} = item;
+          const comments = item.comments?.map(comment => `${comment.userName} : ${comment.comment}`).join('\n');
+          const plays = item.plays?.map(play => `${play.userName} : ${play.plays}`).join('\n');
+          return {...rest, comments, plays};
+        }
+      })
+      setcsvTableData(transformedData);
+    }
+    else navigate('/');
   }, []);
 
 
@@ -238,7 +241,7 @@ const CreateProject = () => {
       });
   };
 
-  
+
   const replaceHandler = () => {
     if (jsonResult === null)
       alert("data is null, check once or try re-entering...");

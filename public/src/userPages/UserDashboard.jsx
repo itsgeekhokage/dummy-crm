@@ -53,58 +53,13 @@ const UserDashboard = () => {
       });
   };
 
-  const ipHandler = (key) => {
-    console.log(typeof key, key);
-    const timeStamp = new Date.now();
-    function formatTimestamp(timestamp) {
-      const options = {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      };
-      return timestamp.toLocaleDateString("en-GB", options);
-    }
-    const formattedTimestamp = formatTimestamp(timeStamp);
-    console.log(formattedTimestamp);
-
-    if (userData.logins.length === 0) {
-      userData.logins.push({ ip: key, lastLogin: formattedTimestamp });
-    } else {
-      if (!userData.logins.includes(key)) {
-        userData.logins.push({ip : key, lastLogin : formattedTimestamp});
-      }
-    }
-    const postData = {
-      id: userData._id,
-      logins: userData.logins,
-    };
-    console.log(postData);
-    fetch(updateUserLink, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
-  };
   useEffect(() => {
-    console.log("state", location.state);
-    setUserData(location.state);
-    fetchProjectData();
+    if(location.state){
+      console.log("state", location.state);
+      setUserData(location.state);
+      fetchProjectData();
+    }
+    else navigate("/");
   }, []);
 
   const handleSelect = (e) => {
