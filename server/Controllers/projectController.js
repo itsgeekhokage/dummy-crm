@@ -42,12 +42,14 @@ const multipleProject = async(req, res) => {
         for(let proj of idArray){
             let project = await projectModel.findOne({_id : proj.project});
 
-            let getHeaders = await headerModel.findOne(project.headers);
-            project.headers = getHeaders;
+            if(project.status === "Active"){
+                let getHeaders = await headerModel.findOne(project.headers);
+                project.headers = getHeaders;
 
-            let getAudioFiles = await Promise.all(project.audioFiles.map(async (audio) => await audioModel.findOne(audio)));
-            project.audioFiles = getAudioFiles;
-            result.push(project);
+                let getAudioFiles = await Promise.all(project.audioFiles.map(async (audio) => await audioModel.findOne(audio)));
+                project.audioFiles = getAudioFiles;
+                result.push(project);
+            }
         }
         res.json({result, message : "user projects retreived successfully...", response : 202});
     } catch (error) {

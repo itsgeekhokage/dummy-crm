@@ -127,6 +127,7 @@ const SingleUser = () => {
       setStatus(location.state.status);
       setAssignedProject(location.state.assignedProject);
     }
+    else navigate('/');
   }, [location]);
 
   // to load pre-assigned project in selected projects
