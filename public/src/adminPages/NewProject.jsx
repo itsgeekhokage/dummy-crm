@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
 import { registerNewProjectLink } from '../../api';
+import { toast } from "react-toastify"
 
 const StyledForm = styled.form`
   display: flex;
@@ -60,13 +61,11 @@ const buttonStyles = {
 
 const NewProject = () => {
     const [projectName, setProjectName] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const navigator = (data) => {
-      console.log(data.response);
-      if (data.response === 404)
-        setErrorMessage("User already registered, kindly try another one ");
+      if (data.response === 400)
+        toast.error("User already registered...");
       else if (data.response === 202)
         navigate("../createProject", { state: data.project });
     };
@@ -75,7 +74,6 @@ const NewProject = () => {
       const postData = {
         projectName,
       };
-      console.log("Request Data:", postData);
 
       fetch(registerNewProjectLink, {
         method: "POST",
@@ -85,19 +83,16 @@ const NewProject = () => {
         body: JSON.stringify(postData),
       })
         .then((response) => {
-          console.log("Response Status:", response.status);
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
           return response.json();
         })
         .then((data) => {
-          console.log("Response Data:", data);
           navigator(data);
         })
         .catch((error) => {
-          console.error("Fetch error:", error.message);
-          console.error(error);
+          // console.error(error);
         });
     };
 
@@ -105,7 +100,7 @@ const NewProject = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
       if (projectName.length == 0 )
-        setErrorMessage("Fields cannot be kept empty...");
+        toast.warn("Fields cannot be kept empty...");
       else createProject();
     };
 
@@ -121,7 +116,6 @@ const NewProject = () => {
         />
       </div>
       <button onClick={(e) => handleSubmit(e)}>Create</button>
-      <p>{errorMessage}</p>
     </StyledForm>
   );
 }

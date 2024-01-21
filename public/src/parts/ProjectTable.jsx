@@ -57,8 +57,7 @@ const StyledDataCell = styled.td`
 `;
 
 const ProjectTable = ({ headers, setHeaders, audioFiles }) => {
-  console.log(headers, audioFiles);
-  const [editedHeaders, setEditedHeaders] = useState(headers);
+
   const filteredKeys = Object.keys(headers).filter(
     (key) => key !== "_id" && key !== "__v"
     );
@@ -76,10 +75,6 @@ const ProjectTable = ({ headers, setHeaders, audioFiles }) => {
   const handleInputChange = (key, value) => {
     setHeaders((prev) => ({ ...prev, [key]: {status : prev[key].status, nickName : value} }));
   };
-
-  useEffect(() => {
-    console.log("ye audioFiles:", audioFiles);
-  }, [audioFiles]);
 
   return (
     <TableContainer>

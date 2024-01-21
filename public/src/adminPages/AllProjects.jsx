@@ -7,6 +7,7 @@ import DriveFileRenameOutlineTwoToneIcon from "@mui/icons-material/DriveFileRena
 import DownloadTwoToneIcon from "@mui/icons-material/DownloadTwoTone";
 import { allProjects } from "../../api";
 import { useNavigate } from "react-router-dom";
+import {toast} from "react-toastify";
 
 const Dashboard = styled.div`
   display: flex;
@@ -74,7 +75,6 @@ const AllProjects = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.all);
         const statusOrder = { Inactive: 1, Active: 0 };
 
         const sortedData = [...data.all].sort((a, b) => {
@@ -88,7 +88,7 @@ const AllProjects = () => {
         setSampleList(sortedData);
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
       });
   };
   useEffect(() => {

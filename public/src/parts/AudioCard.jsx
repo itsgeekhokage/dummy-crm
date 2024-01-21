@@ -98,10 +98,10 @@ const AudioCard = ({ file, userData, projectLimit }) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.response);
+        // console.log(data.response);
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
       });
   };
 

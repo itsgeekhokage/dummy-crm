@@ -63,7 +63,8 @@ const newProject = async (req, res) => {
     try {
         const existingProject = await projectModel.findOne({projectName});
         if(existingProject){
-            res.status(202).json({response : 404, project : existingProject})
+            res.status(202).json({response : 400, project : existingProject})
+            console.log("hre")
         }
         else {
             const header = new headerModel({});

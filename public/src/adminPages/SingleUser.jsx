@@ -110,7 +110,7 @@ const SingleUser = () => {
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
   const [assignedProject, setAssignedProject] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const [projectlist, setProjectList] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
   const [selectedProjects, setSelectedProjects] = useState([]);
@@ -119,7 +119,6 @@ const SingleUser = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(location.state);
     if (location.state) {
       setUserId(location.state._id);
       setUserName(location.state.userName);
@@ -140,7 +139,6 @@ const SingleUser = () => {
   }, [assignedProject, projectlist]);
 
   const optionSetter = () => {
-    console.log("list", projectlist);
     const options = projectlist.map((item) => item.projectName);
     setProjectOptions(options);
   };
@@ -159,11 +157,11 @@ const SingleUser = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.all);
         setProjectList(data.all);
+        setLoading(false);
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
       });
   };
   useEffect(() => {
@@ -173,12 +171,7 @@ const SingleUser = () => {
     optionSetter();
   }, [projectlist]);
 
-  const handleStatusChange = () => {
-    // Handle project selection here if needed
-  };
-
   const navigator = (data) => {
-    console.log(data.response);
     if (data.response === 202) navigate("../allUser");
   };
   const updateUser = () => {
@@ -203,13 +196,13 @@ const SingleUser = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         navigator(data);
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
       });
   };
+  
   const handleAddProject = (e) => {
     e.preventDefault();
     const isProjectSelected = selectedProjects.some(
@@ -227,9 +220,8 @@ const SingleUser = () => {
       ]);
     }
     else{
-      alert("already added!")
+      toast.info("already added!")
     }
-    console.log(assignedProject, "ass")
   };
 
   const handleOptionChange = (e) => {
@@ -254,10 +246,11 @@ const SingleUser = () => {
   };
 
   const deleteProjectHandler = (key) => {
-    console.log(key, assignedProject);
     const newlist = assignedProject.filter((item) => item.project !== key);
     setAssignedProject(newlist);
   };
+
+
   return (
     <>
       <StyledForm>
@@ -309,7 +302,7 @@ const SingleUser = () => {
               <option
                 value=""
                 disabled>
-                Select an option
+                {loading ? "loading": "Select an option"}
               </option>
               {projectOptions.map((option, index) => (
                 <option
@@ -330,6 +323,7 @@ const SingleUser = () => {
         <SelectedProject>
           {!selectedProjects.length && <div>No Projects Assigned yet!!!!!</div>}
           {selectedProjects.length > 0 &&
+            !loading ?
             selectedProjects.map((item) => {
               return (
                 <div>
@@ -343,7 +337,7 @@ const SingleUser = () => {
                   </div>
                 </div>
               );
-            })}
+            }) : "loading..."}
         </SelectedProject>
       </div>
     </>

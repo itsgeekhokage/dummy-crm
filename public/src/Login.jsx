@@ -5,6 +5,7 @@ import { TextField, Button } from "@mui/material";
 import styled from "styled-components";
 import { signinLink } from "../api";
 import { useNavigate } from "react-router-dom";
+import {toast }from "react-toastify";
 
 const Container = styled.div`
   display: flex;
@@ -44,7 +45,6 @@ const buttonStyles = {
 const UserLogin = () => {
   let [userName, setUserName] = useState("");
   let [password, setPassword] = useState("");
-  let [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const navigator = (data) => {
@@ -89,20 +89,20 @@ const UserLogin = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data)
-        let userToken = decodeJwt(data.token);
-        console.log(userToken)
-        if(data.response === 202) navigator(userToken);
-        else alert("Authentication failed, kindly enter correct userId or password");
+        if(data.response === 202) {
+          let userToken = decodeJwt(data.token);
+          navigator(userToken);
+        }
+        else toast.error("Authentication failed, kindly enter correct userId or password");
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
       });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(userName.length == 0 || password.length == 0) setErrorMessage("Fields cannot be kept empty...");
+    if(userName.length == 0 || password.length == 0) toast.warn("Fields cannot be kept empty...");
     else authChecker();
   };
 
@@ -135,7 +135,6 @@ const UserLogin = () => {
           onClick={(e) => handleSubmit(e)}>
           Login
         </Button>
-        <p>{errorMessage}</p>
       </StyledForm>
     </Container>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom';
 import { registerNewUserLink } from '../../api';
+import {toast} from "react-toastify";
 
 const StyledForm = styled.form`
   display: flex;
@@ -62,12 +63,10 @@ const buttonStyles = {
 const CreateUser = () => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const navigator = (data) => {
-      console.log(data.response);
-      if(data.response === 404) setErrorMessage("User already registered, kindly try another one ")
+      if(data.response === 404) toast.warn("User already registered")
       else if(data.response === 202) navigate("../singleuser", {state : data.user});
     };
 
@@ -100,7 +99,7 @@ const CreateUser = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
       if (userName.length == 0 || password.length == 0)
-        setErrorMessage("Fields cannot be kept empty...");
+        toast.error("Fields cannot be kept empty...");
       // else if(userName.includes(" ")) setErrorMessage("Seems like your are using WhiteSpaces in between, avoid using them...")
       else createUser();
     };
@@ -121,7 +120,6 @@ const CreateUser = () => {
         <button onClick={(e)=> handleSubmit(e)}>
             Create
         </button>
-        <p>{errorMessage}</p>
      </StyledForm>
   )
 }
