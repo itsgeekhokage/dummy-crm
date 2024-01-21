@@ -1,11 +1,7 @@
-/** @format */
-
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import AudioCard from "./AudioCard";
 import { CSVLink } from "react-csv";
-import { HdrEnhancedSelectSharp } from "@mui/icons-material";
 
 const Container = styled.div`
   height: 100%;
@@ -98,9 +94,7 @@ const Table = ({ data, userData, userName }) => {
       return typeof(item[headerKey])==="number" ? item[headerKey] == key.trim() : item[headerKey]?.toLowerCase().includes(key.trim().toLowerCase())
     });
     if (key === "") newList = data.audioFiles;
-    // console.log("newList", newList);
     setSampleData(newList);
-    // console.log("sampleData", sampleData);
   };
 
   useEffect(() => {
@@ -130,7 +124,6 @@ const Table = ({ data, userData, userName }) => {
       else obj["plays"] = "";
       return obj;
     });
-    //  console.log(jsonData)
     setCSVDownload(jsonData);
   }, [filteredKeys]);
 
@@ -225,7 +218,7 @@ const Table = ({ data, userData, userName }) => {
             projectLimit={limit}
           />
         ) : (
-          <div>Sorry, but this project has expired</div>
+          <div style={{ height: "4rem", display:"flex", justifyContent:"center", alignItems:"center"}}>Sorry, but this project has expired</div>
         )}
       </div>
     </Container>

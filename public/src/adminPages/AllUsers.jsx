@@ -7,6 +7,8 @@ import DriveFileRenameOutlineTwoToneIcon from "@mui/icons-material/DriveFileRena
 import { fetchAllUsers } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { deleteUser } from "../../api";
+import { toast } from "react-toastify";
+
 
 const Dashboard = styled.div`
   display: flex;
@@ -119,7 +121,6 @@ const AllUsers = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.allUsers);
         const statusOrder = { Inactive: 1, Active: 0 };
         data = [...data.allUsers].sort((a, b) => {
           const statusA = statusOrder[a["status"]];
@@ -130,7 +131,8 @@ const AllUsers = () => {
         setSampleList(data);
       })
       .catch((error) => {
-        console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
+        toast.error("404 error! kindly visit later...")
       });
   };
   useEffect(() => {

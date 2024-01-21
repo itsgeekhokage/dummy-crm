@@ -1,8 +1,6 @@
-import { useState } from "react";
 import "./App.css";
 import UserDashboard from "./userPages/UserDashboard";
 import UserLogin from "./Login";
-import Navbar from "./adminPages/Navbar";
 import AdminPanel from "./adminPages/AdminPanel";
 import {
   createBrowserRouter,
@@ -16,10 +14,10 @@ import SingleUser from "./adminPages/SingleUser";
 import CreateProject from "./adminPages/CreateProject";
 import AllProjects from "./adminPages/AllProjects";
 import NewProject from "./adminPages/NewProject";
-import CsvToJsonConverter from "./adminPages/TestPage";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const [count, setCount] = useState(0);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -46,7 +44,18 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      {/* <CsvToJsonConverter/> */}
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </>
   );
 }
