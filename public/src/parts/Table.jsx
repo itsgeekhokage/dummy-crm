@@ -223,6 +223,6 @@ const Table = ({ data, userData, userName }) => {
       </div>
     </Container>
   );
-};
+};  
 
 export default Table;
