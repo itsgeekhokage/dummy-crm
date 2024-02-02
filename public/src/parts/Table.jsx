@@ -9,32 +9,30 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 3rem;
 
   .userDashboardSearchDiv {
     margin-bottom: 1rem;
     #downloadButton {
-      background-color: #3a3a3a;
-      color: #ffffff;
+      color: yellow;
       text-decoration: none;
-      text-align: center;
-      margin: auto;
-      padding: 4px;
+      padding: 0 1rem;
+      margin: auto 0;
+      width: auto;
     }
     #dropDown{
-      background-color: #3a3a3a;
       border: 0;
+      background-color: #3a3a3a;
       outline: 0;
       color: #ffffff;
       text-align: center;
-      width: 10rem;
+      margin: 1rem;
       font-size: 1rem;
       cursor: pointer;
+      font-family: var(--font-family);
     }
   }
 
   .userDashboardSearchBar {
-    width: 100%;
     padding: 0.5rem;
   }
 
@@ -46,7 +44,7 @@ const Container = styled.div`
   }
 
   .table {
-    width: 90vw;
+    width: 100%;
     overflow: auto;
     height: 80vh;
   }
@@ -207,7 +205,7 @@ const Table = ({ data, userData, userName }) => {
           </div>
         ))}
       </div>
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", height : "4rem"}}>
         {selectedProject === null ? (
           ""
         ) : new Date(data.deadline).toISOString() >=
@@ -223,6 +221,6 @@ const Table = ({ data, userData, userName }) => {
       </div>
     </Container>
   );
-};  
+};
 
 export default Table;
