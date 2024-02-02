@@ -17,10 +17,12 @@ const AudioContainer = styled.div`
   padding: 10px 3rem;
   border-top: 3px solid #3a3a3a;
   position: relative;
+  margin-bottom: -3rem;
 `;
 
 const MidSection = styled.div`
   width: 30%;
+  font-size: 1rem;
   text-align: center;
 `;
 
