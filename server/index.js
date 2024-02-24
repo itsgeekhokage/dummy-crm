@@ -16,8 +16,13 @@ const DATABASE_URL = process.env.DATABASE_URL;
 
 
 connectdb(DATABASE_URL);
-
 app.use(cors());
+// app.use(cors({
+//             origin : ["https://crm-client-navy.vercel.app"],
+//             methods : ["GET", "POST", "DELETE", "PUT"],
+//             credentials : true
+//         }        
+//     ));
 app.use(express.json());
 
 app.use('/auth', auth);
