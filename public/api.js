@@ -1,4 +1,5 @@
-const hostLink = "http://localhost:3000"
+// const hostLink = "http://localhost:3000"
+const hostLink = import.meta.env.VITE_HOST_API;
 
 const registerNewUserLink = `${hostLink}/auth/newUser`;
 const signinLink = `${hostLink}/auth/signin`;
