@@ -1,6 +1,6 @@
 // const hostLink = "http://localhost:3000"
-// const hostLink = import.meta.env.VITE_HOST_API;
-const hostLink = "https://client-crm-eta.vercel.app/"
+const hostLink = import.meta.env.VITE_HOST_API;
+// const hostLink = "https://client-crm-eta.vercel.app/"
 
 const registerNewUserLink = `${hostLink}/auth/newUser`;
 const signinLink = `${hostLink}/auth/signin`;
