@@ -17,13 +17,13 @@ const DATABASE_URL = "mongodb+srv://abhisheksingh:Mon$ter25452@cluster0.vnlxnb7.
 
 
 connectdb(DATABASE_URL);
-app.use(cors());
-// app.use(cors({
-//             origin : ["https://crm-client-navy.vercel.app"],
-//             methods : ["GET", "POST", "DELETE", "PUT"],
-//             credentials : true
-//         }        
-//     ));
+// app.use(cors());
+app.use(cors({
+             origin : ["https://main.d2j3su6c5okp5n.amplifyapp.com"],
+             methods : ["GET", "POST", "DELETE", "PUT"],
+             credentials : true
+         }        
+     ));
 app.use(express.json());
 
 app.use('/auth', auth);
