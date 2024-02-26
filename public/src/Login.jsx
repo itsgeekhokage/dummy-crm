@@ -96,7 +96,7 @@ const UserLogin = () => {
         else toast.error("Authentication failed, kindly enter correct userId or password");
       })
       .catch((error) => {
-        // console.error("Fetch error:", error);
+        console.error("Fetch error:", error);
       });
   };
 
