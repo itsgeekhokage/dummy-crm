@@ -24,7 +24,7 @@ app.use(cors());
 //             credentials : true
          }        
 //     ));
-app.use(express.json());
+app.use(express.json({ limit: "30mb" }));
 
 app.use('/auth', auth);
 app.use('/user', user);
