@@ -9,7 +9,7 @@ const audioSchema = new mongoose.Schema({
     age: String,
     gender: String,
     casteCategory: String,
-    caste: String,
+    category: String,
     locality: String,
     ac: String,
     pc: String,
