@@ -22,7 +22,7 @@ app.use(cors());
 //             origin : ["https://main.d2j3su6c5okp5n.amplifyapp.com"],
 //             methods : ["GET", "POST", "DELETE", "PUT"],
 //             credentials : true
-         }        
+//         }        
 //     ));
 app.use(express.json({ limit: "30mb" }));
 
