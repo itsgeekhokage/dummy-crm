@@ -106,10 +106,7 @@ const Table = ({ data, userData, userName }) => {
   useEffect(() => {
     const jsonData = data.audioFiles.map((item) => {
       let obj = {};
-      filteredKeys.forEach((keyObj) => {
-        const key = Object.keys(keyObj)[0];
-        obj[key] = item[key];
-      });
+      obj["fileName"] = item.fileName;
       const comment = item.comments.find(
         (com) => com.userName === userData.userName
       );
