@@ -6,7 +6,7 @@ const audioSchema = new mongoose.Schema({
     fileName: String,
     audioFileLink: String,
     name: String,
-    age: Number,
+    age: String,
     gender: String,
     casteCategory: String,
     caste: String,
