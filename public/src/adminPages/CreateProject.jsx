@@ -12,7 +12,7 @@ import {
   updateHeaderLink,
 } from "../../api";
 import { CSVLink } from "react-csv";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 const Dashboard = styled.div`
   display: flex;
@@ -150,9 +150,9 @@ const CreateProject = () => {
   const [csvTableData, setcsvTableData] = useState([]);
 
   useEffect(() => {
-    if(location.state){
+    if (location.state) {
       let { _id, projectName, status, audioFiles, headers, deadline, limit } =
-      location.state;
+        location.state;
       deadline = deadline.slice(0, 10);
       setProjectId(_id);
       setProjectName(projectName);
@@ -161,19 +161,21 @@ const CreateProject = () => {
       setDeadline(deadline);
       setHeaders(headers);
       setAudioFiles(audioFiles);
-      const transformedData = audioFiles?.map(item => {
-        if(item){
-          const {_id, project, __v, ...rest} = item;
-          const comments = item.comments?.map(comment => `${comment.userName} : ${comment.comment}`).join('\n');
-          const plays = item.plays?.map(play => `${play.userName} : ${play.plays}`).join('\n');
-          return {...rest, comments, plays};
+      const transformedData = audioFiles?.map((item) => {
+        if (item) {
+          const { _id, project, __v, ...rest } = item;
+          const comments = item.comments
+            ?.map((comment) => `${comment.userName} : ${comment.comment}`)
+            .join("\n");
+          const plays = item.plays
+            ?.map((play) => `${play.userName} : ${play.plays}`)
+            .join("\n");
+          return { ...rest, comments, plays };
         }
-      })
+      });
       setcsvTableData(transformedData);
-    }
-    else navigate('/');
+    } else navigate("/");
   }, []);
-
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -185,7 +187,10 @@ const CreateProject = () => {
           .slice(1)
           .map((row) => row.map((value) => value.trim()));
 
-        if(JSON.stringify(Object.keys(csvSampleData[0])) == JSON.stringify(parsedHeaders)) {
+        if (
+          JSON.stringify(Object.keys(csvSampleData[0])) ==
+          JSON.stringify(parsedHeaders)
+        ) {
           const jsonData = parsedValues.map((row) => {
             const obj = {};
             parsedHeaders.forEach((header, index) => {
@@ -194,14 +199,15 @@ const CreateProject = () => {
             return obj;
           });
           setJsonResult(jsonData);
-        }
-        else {
-          alert("plss re-check your input file headers according to CSV Sample file...")
+        } else {
+          alert(
+            "plss re-check your input file headers according to CSV Sample file..."
+          );
         }
       },
       header: false,
     });
-  }
+  };
 
   const appendHandler = () => {
     const postData = {
@@ -222,22 +228,26 @@ const CreateProject = () => {
         return response.json();
       })
       .then((data) => {
-        if(data.response === 202){
+        if (data.response === 202) {
           setAudioFiles(data.files);
           setcsvTableData(data.files);
           if (data.count != 0)
-          toast.info(`Data successfully updated! ${jsonResult.lengh - data.count} duplicates Trimmed`);
-        else toast.info("Data successfully updated...")
-      }
-      else {
-        toast.warn("Internal Server Error, try reconsidering your data, or come back later...")
-      }
+            toast.info(
+              `Data successfully updated! ${
+                jsonResult.lengh - data.count
+              } duplicates Trimmed`
+            );
+          else toast.info("Data successfully updated...");
+        } else {
+          toast.warn(
+            "Internal Server Error, try reconsidering your data, or come back later..."
+          );
+        }
       })
       .catch((error) => {
         console.error("Fetch error:", error);
       });
   };
-
 
   const replaceHandler = () => {
     if (jsonResult === null)
@@ -261,13 +271,15 @@ const CreateProject = () => {
           return response.json();
         })
         .then((data) => {
-          if(data.response === 202){
+          if (data.response === 202) {
             toast.warn("data successfully replaced...");
             setAudioFiles(data.newAudioModels, () => {
               setcsvTableData(data.newAudioModels);
             });
-          }
-          else toast.warn("Server problem, try reconsidering your data or come back later...")
+          } else
+            toast.warn(
+              "Server problem, try reconsidering your data or come back later..."
+            );
         })
         .catch((error) => {
           console.error("Fetch error:", error);
@@ -376,21 +388,19 @@ const CreateProject = () => {
               type="file"
               onChange={handleFileChange}
             />
-            {audioFiles.length === 0 && (
+            {/* {audioFiles.length === 0 && (
               <FileActionButton onClick={() => replaceHandler()}>
                 Add
               </FileActionButton>
-            )}
-            {audioFiles.length !== 0 && (
-              <>
-                <FileActionButton onClick={appendHandler}>
-                  Append
-                </FileActionButton>
-                <FileActionButton onClick={() => replaceHandler()}>
-                  Replace
-                </FileActionButton>
-              </>
-            )}
+            )} */}
+            <>
+              <FileActionButton onClick={appendHandler}>
+                Append
+              </FileActionButton>
+              <FileActionButton onClick={() => replaceHandler()}>
+                Replace
+              </FileActionButton>
+            </>
           </FileUploadContainer>
         </div>
         <div>

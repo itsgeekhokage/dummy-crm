@@ -33,7 +33,7 @@ const UserDashboard = () => {
         return response.json();
       })
       .then((data) => {
-        if (data.response == 202) {
+        if (data.response == 200) {
           setProjects(data.result);
           setLoading(false);
         }

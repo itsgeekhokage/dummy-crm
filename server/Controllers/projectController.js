@@ -5,20 +5,26 @@ import mongoose from "mongoose";
 
 const allProjects = async (req, res) => {
     try {
-        const all = await projectModel.find();
-        const modifiedAll = [];
+        let all = await projectModel.find().select("projectName status deadline limit headers").populate('headers').exec();
+        all = all.map(e => {
+            e.audioFiles = [];
+            return e
+        });
+        res.json({ all, message: "user projects retreived successfully...", response: 200 });
 
-        for (const item of all) {
-            let getHeaders = await headerModel.findOne(item.headers);
-            item.headers = getHeaders;
+        // const modifiedAll = [];
 
-            let getAudioFiles = await Promise.all(item.audioFiles.map(async (audio) => await audioModel.findOne(audio)));
-            item.audioFiles = getAudioFiles;
+        // for (const item of all) {
+        //     let getHeaders = await headerModel.findOne(item.headers);
+        //     item.headers = getHeaders;
 
-            modifiedAll.push(item);
-        }
+        //     let getAudioFiles = await Promise.all(item.audioFiles.map(async (audio) => await audioModel.findOne(audio)));
+        //     item.audioFiles = getAudioFiles;
 
-        res.json({ all: modifiedAll, response: 202 });
+        //     modifiedAll.push(item);
+        // }
+
+        // res.json({ all, response: 202 });
     } catch (error) {
         console.error(error);
         res.status(500).json({ mes: "Internal Server Error" });
@@ -29,52 +35,55 @@ const getProject = async (req, res) => {
     const id = req.params.id;
     try {
         const project = await projectModel.findOne(id);
-        res.status(200).json({message : "project fetched successfully..."});
+        res.status(200).json({ message: "project fetched successfully..." });
     } catch (error) {
         console.log(error)
     }
 }
 
-const multipleProject = async(req, res) => {
-    const {idArray}= req.body;
+const multipleProject = async (req, res) => {
+    const { idArray } = req.body;
+    const projectIds = idArray.map(e => e.project);
     try {
-        const result = [];
-        for(let proj of idArray){
-            let project = await projectModel.findOne({_id : proj.project});
+        // const result = [];
+        // for(let proj of idArray){
+        //     let project = await projectModel.findOne({_id : proj.project});
 
-            if(project.status === "Active"){
-                let getHeaders = await headerModel.findOne(project.headers);
-                project.headers = getHeaders;
+        //     if(project.status === "Active"){
+        //         let getHeaders = await headerModel.findOne(project.headers);
+        //         project.headers = getHeaders;
 
-                let getAudioFiles = await Promise.all(project.audioFiles.map(async (audio) => await audioModel.findOne(audio)));
-                project.audioFiles = getAudioFiles;
-                result.push(project);
-            }
-        }
-        res.json({result, message : "user projects retreived successfully...", response : 202});
+        //         let getAudioFiles = await Promise.all(project.audioFiles.map(async (audio) => await audioModel.findOne(audio)));
+        //         project.audioFiles = getAudioFiles;
+        //         result.push(project);
+        //     }
+        // }
+        const result = await projectModel.find({ _id: { $in: projectIds }, status: 'Active' }).select("projectName status deadline limit headers audioFiles").populate('headers audioFiles').exec();
+        res.json({ result, message: "user projects retreived successfully...", response: 200 });
+
     } catch (error) {
         console.log(error);
-        res.json({mesage : "internal server problem", repsonse : 404});
+        res.json({ mesage: "internal server problem", repsonse: 404 });
     }
 }
 
 const newProject = async (req, res) => {
-    const {projectName} = req.body;
+    const { projectName } = req.body;
     try {
-        const existingProject = await projectModel.findOne({projectName});
-        if(existingProject){
-            res.status(202).json({response : 400, project : existingProject})
+        const existingProject = await projectModel.findOne({ projectName });
+        if (existingProject) {
+            res.status(202).json({ response: 400, project: existingProject })
             console.log("hre")
         }
         else {
             const header = new headerModel({});
             const project = new projectModel({
                 projectName,
-                headers : header
+                headers: header
             })
             await header.save();
             await project.save();
-            res.status(202).json({response : 202, project});
+            res.status(202).json({ response: 202, project });
         }
     } catch (error) {
         console.log(error)
@@ -106,7 +115,7 @@ const replaceAudios = async (req, res) => {
         // Step 6: Save the project
         await project.save();
 
-        res.json({ response : 202, message: "Audios replaced successfully", newAudioModels });
+        res.json({ response: 202, message: "Audios replaced successfully", newAudioModels });
     } catch (error) {
         console.log(error);
         res.status(500).json({ response: "Internal Server Error" });
@@ -128,10 +137,10 @@ const appendAudios = async (req, res) => {
 
         let count = 0;
 
-        for(const newFile of data){
-            let ind =  existingAudioModels.findIndex((item) => item.fileName === newFile.fileName);
-            if(ind === -1){
-                let newAudio = new audioModel({...newFile, project : project._id});
+        for (const newFile of data) {
+            let ind = existingAudioModels.findIndex((item) => item.fileName === newFile.fileName);
+            if (ind === -1) {
+                let newAudio = new audioModel({ ...newFile, project: project._id });
                 newAudio.save();
                 existingAudioModels.push(newAudio);
                 existingAudioIds.push(newAudio._id);
@@ -139,7 +148,7 @@ const appendAudios = async (req, res) => {
             }
         }
         await project.save();
-        res.json({ files : existingAudioModels, count, response : 202 });
+        res.json({ files: existingAudioModels, count, response: 202 });
     } catch (error) {
         console.log(error)
         res.json({ error: error })
@@ -148,25 +157,25 @@ const appendAudios = async (req, res) => {
 
 
 const updateHeader = async (req, res) => {
-    const {id, data} = req.body;
+    const { id, data } = req.body;
     try {
         await headerModel.findByIdAndUpdate(id, data);
-        res.json({message : "headers successfully updated", response : 202});
+        res.json({ message: "headers successfully updated", response: 202 });
     } catch (error) {
         console.log(error);
-        res.json({message : "Interval Server Error", response : 404});
+        res.json({ message: "Interval Server Error", response: 404 });
     }
 }
 
 const updateProject = async (req, res) => {
-    const {data, id} = req.body;
+    const { data, id } = req.body;
     try {
         await projectModel.findByIdAndUpdate(id, data);
-        res.json({response : 202});
+        res.json({ response: 202 });
     } catch (error) {
         console.log(error);
     }
 }
 
 
-export {newProject, replaceAudios, appendAudios, updateProject, allProjects, multipleProject, updateHeader};
+export { newProject, replaceAudios, appendAudios, updateProject, allProjects, multipleProject, updateHeader };
