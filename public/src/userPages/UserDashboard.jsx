@@ -1,3 +1,4 @@
+/** @format */
 
 import React, { useEffect, useState } from "react";
 import Table from "../parts/Table.jsx";
@@ -5,108 +6,90 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getProjectData, updateUserLink } from "../../api.js";
 import LogoutIcon from "@mui/icons-material/Logout.js";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useQuery } from "@tanstack/react-query";
 
 const UserDashboard = () => {
-  let [userData, setUserData] = useState([]);
-  let [projects, setProjects] = useState([]);
   let [project, setProject] = useState({});
-  let [loading, setLoading] = useState(true);
-  let [projectsBox, setProjectsBox] = useState(true);
+  let [userData, setUserData] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { data, isLoading } =
+    useQuery({
+      queryKey: ["userProjects"],
+      queryFn: () => fetchProjectData(),
+    }) || {};
+  console.log(data);
   const fetchProjectData = () => {
-    const postData = {
-      idArray: location.state.assignedProject,
-    };
-    fetch(getProjectData, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status : ${response.status}`);
-        }
-        return response.json();
+    console.log(location.state.assignedProject);
+    return new Promise((resolve, reject) => {
+      const postData = {
+        idArray: location.state.assignedProject,
+      };
+      fetch(getProjectData, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
       })
-      .then((data) => {
-        if (data.response == 200) {
-          setProjects(data.result);
-          setLoading(false);
-        }
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status : ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.response == 200) {
+            // setProjects(data.result);
+            // setLoading(false);
+            resolve(data.result);
+          }
+        });
+    });
   };
 
+  // Project List
   useEffect(() => {
     if (location.state) {
       setUserData(location.state);
-      fetchProjectData();
+      // fetchProjectData();
     } else navigate("/");
   }, [location.state]);
 
-  const handleSelect = (ind) => {
-    for (let i = 0; i < projects.length; i++) {
-      if (projects[i].projectName == ind) {
-        setProject(projects[i]);
-      }
-    }
+  const handleSelect = (proj) => {
+    setProject(proj);
   };
 
   return (
     <div className="userDashboard">
-      {projectsBox ? (
-        <div className="userDashboardFrontRow">
-          <button
-            onClick={() => setProjectsBox(false)}
-            style={{
-              cursor: "pointer",
-              color: "white",
-              background: "transparent",
-              padding: ".3rem 1rem",
-              margin: ".8rem",
-              fontSize: "1rem",
-            }}>
-            Close
-          </button>
-          <div className="userDashboardProjectList">
-            <div
-              className="userDashboardSelector"
-              style={{ color: "yellow" }}>
-              Choose Project
-            </div>
-            {loading ? (
-              <div className="userDashboardSelector">Loading</div>
-            ) : (
-              projects.map((file, index) => (
-                <div
-                  key={index}
-                  className="userDashboardSelector"
-                  onClick={() => handleSelect(file.projectName)}>
-                  {file.projectName}
-                </div>
-              ))
-            )}
+      <div className="userDashboardFrontRow">
+        <div className="userDashboardProjectList">
+          <div
+            className="userDashboardSelector"
+            style={{ color: "yellow" }}>
+            Choose Project
           </div>
-          <LogoutIcon
-            style={{
-              position: "absolute",
-              right: "3rem",
-              top: ".8rem",
-              color: "white",
-              cursor: "pointer",
-            }}
-            onClick={() => navigate("/")}
-          />
+          {data?.map((file, index) => (
+            <div
+              key={index}
+              className="userDashboardSelector"
+              onClick={() => handleSelect(file)}>
+              {file.projectName}
+            </div>
+          ))}
         </div>
-      ) : (
-        <MenuIcon
-          onClick={() => setProjectsBox(true)}
-          style={{ cursor: "pointer", fontSize: "2.5rem", margin:".8rem" }}
+        <LogoutIcon
+          style={{
+            position: "absolute",
+            right: "3rem",
+            top: ".8rem",
+            color: "white",
+            cursor: "pointer",
+          }}
+          onClick={() => navigate("/")}
         />
-      )}
+      </div>
       <div className="userDashboardAudiosContainer">
         {Object.keys(project).length === 0 ? (
           <h3 style={{ display: "flex", justifyContent: "center" }}>

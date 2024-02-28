@@ -18,9 +18,10 @@ const updateHeaderLink = `${hostLink}/project/headers/update`;
 
 // userDashBoard
 const getUserData = `${hostLink}/user/data/:id`;
+export const projectList = `${hostLink}/project/list`; // TODO:
 const getProjectData = `${hostLink}/project/multiple`;
 
 // audio
 const audioUpdateLink = `${hostLink}/audio/update`;
 
-export {hostLink, registerNewUserLink, signinLink, updateUserLink, fetchAllUsers, deleteUser, registerNewProjectLink, replaceProjectFiles, appendProjectFiles, updateProject, allProjects, getUserData, getProjectData, audioUpdateLink, updateHeaderLink};
+export { hostLink, registerNewUserLink, signinLink, updateUserLink, fetchAllUsers, deleteUser, registerNewProjectLink, replaceProjectFiles, appendProjectFiles, updateProject, allProjects, getUserData, getProjectData, audioUpdateLink, updateHeaderLink };

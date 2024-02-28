@@ -1,7 +1,11 @@
+/** @format */
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import AudioCard from "./AudioCard";
 import { CSVLink } from "react-csv";
+import { DataGrid } from "@mui/x-data-grid";
+import Box from "@mui/material/Box";
 
 const Container = styled.div`
   height: 100%;
@@ -19,7 +23,7 @@ const Container = styled.div`
       margin: auto 0;
       width: auto;
     }
-    #dropDown{
+    #dropDown {
       border: 0;
       background-color: #3a3a3a;
       outline: 0;
@@ -85,20 +89,42 @@ const Table = ({ data, userData, userName }) => {
   let [searchKey, setSearchKey] = useState("");
   let [sampleData, setSampleData] = useState(data.audioFiles);
   let [csvDownload, setCSVDownload] = useState("");
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
+  const [rowCountState, setRowCountState] = React.useState(
+    pageInfo?.totalRowCount || 0,
+  );
 
   const filterData = (key) => {
     setSearchKey(key);
     let newList = data.audioFiles.filter((item) => {
-      return typeof(item[headerKey])==="number" ? item[headerKey] == key.trim() : item[headerKey]?.toLowerCase().includes(key.trim().toLowerCase())
+      return typeof item[headerKey] === "number"
+        ? item[headerKey] == key.trim()
+        : item[headerKey]?.toLowerCase().includes(key.trim().toLowerCase());
     });
     if (key === "") newList = data.audioFiles;
     setSampleData(newList);
   };
 
   useEffect(() => {
-    const filteredArray = Object.entries(data?.headers)
-      .filter(([key, header]) => header.status === true)
-      .map(([key, header]) => ({ [key]: header }));
+    const filteredArray = [];
+    // const filteredArray = Object.entries(data?.headers)
+    //   .filter(([key, header]) => header.status === true)
+    //   .map(([key, header]) => ({ [key]: header }));
+
+    const ne = Object.entries(data.headers);
+    ne.map((item) => {
+      if (item[1].status == true) {
+        let newCol = {
+          field: item[0],
+          headerName: item[1].nickName,
+          width: 150,
+        };
+        filteredArray.push(newCol);
+      }
+    });
 
     setFilteredKeys(filteredArray);
   }, [data?.headers]);
@@ -133,11 +159,19 @@ const Table = ({ data, userData, userName }) => {
   return (
     <Container>
       <div className="userDashboardSearchDiv">
-        <select id="dropDown" onChange={(e)=>setHeaderKey(e.target.value)}>
+        <select
+          id="dropDown"
+          onChange={(e) => setHeaderKey(e.target.value)}>
           <option value="0">Select Field</option>
           {filteredKeys.map((item, index) => {
             const key = Object.keys(item)[0];
-            return <option value={key} key={index}>{item[key].nickName}</option>;
+            return (
+              <option
+                value={key}
+                key={index}>
+                {item[key].nickName}
+              </option>
+            );
           })}
         </select>
         <input
@@ -165,7 +199,31 @@ const Table = ({ data, userData, userName }) => {
           )}. To listen further, please connect with the Admin.`}
         </div>
       </div>
-      <div className="table">
+      <Box sx={{ height: 600, width: "100%" }}>
+        <DataGrid
+          rows={sampleData}
+          columns={filteredKeys}
+          getRowId={(row) => row._id}
+          onRowClick={(row) => console.log(row)}
+          rowCount={}
+          loading={isLoading}
+          pageSizeOptions={[10]}
+          paginationMode="server"
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          // initialState={{
+          //   pagination: {
+          //     paginationModel: {
+          //       pageSize: 15,
+          //     },
+          //   },
+          // }}
+          // pageSizeOptions={[5]}
+          // checkboxSelection
+          // disableRowSelectionOnClick
+        />
+      </Box>
+      {/* <div className="table">
         <div className="row">
           {filteredKeys.map((item, index) => {
             const key = Object.keys(item)[0];
@@ -201,8 +259,8 @@ const Table = ({ data, userData, userName }) => {
             })}
           </div>
         ))}
-      </div>
-      <div style={{ width: "100%", height : "4rem"}}>
+      </div> */}
+      <div style={{ width: "100%", height: "4rem" }}>
         {selectedProject === null ? (
           ""
         ) : new Date(data.deadline).toISOString() >=
@@ -213,7 +271,15 @@ const Table = ({ data, userData, userName }) => {
             projectLimit={limit}
           />
         ) : (
-          <div style={{ height: "4rem", display:"flex", justifyContent:"center", alignItems:"center"}}>Sorry, but this project has expired</div>
+          <div
+            style={{
+              height: "4rem",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            Sorry, but this project has expired
+          </div>
         )}
       </div>
     </Container>
