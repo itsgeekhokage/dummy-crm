@@ -199,31 +199,8 @@ const Table = ({ data, userData, userName }) => {
           )}. To listen further, please connect with the Admin.`}
         </div>
       </div>
-      <Box sx={{ height: 600, width: "100%" }}>
-        <DataGrid
-          rows={sampleData}
-          columns={filteredKeys}
-          getRowId={(row) => row._id}
-          onRowClick={(row) => console.log(row)}
-          rowCount={}
-          loading={isLoading}
-          pageSizeOptions={[10]}
-          paginationMode="server"
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          // initialState={{
-          //   pagination: {
-          //     paginationModel: {
-          //       pageSize: 15,
-          //     },
-          //   },
-          // }}
-          // pageSizeOptions={[5]}
-          // checkboxSelection
-          // disableRowSelectionOnClick
-        />
-      </Box>
-      {/* <div className="table">
+
+      <div className="table">
         <div className="row">
           {filteredKeys.map((item, index) => {
             const key = Object.keys(item)[0];
@@ -259,7 +236,7 @@ const Table = ({ data, userData, userName }) => {
             })}
           </div>
         ))}
-      </div> */}
+      </div> 
       <div style={{ width: "100%", height: "4rem" }}>
         {selectedProject === null ? (
           ""
