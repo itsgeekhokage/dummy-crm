@@ -121,6 +121,7 @@ const replaceAudios = async (req, res) => {
         res.status(500).json({ response: "Internal Server Error" });
     }
 };
+
 const appendAudios = async (req, res) => {
     const { id, data } = req.body;
 
@@ -136,15 +137,18 @@ const appendAudios = async (req, res) => {
         }
 
         let count = 0;
+        console.log(data.length)
 
         for (const newFile of data) {
-            let ind = existingAudioModels.findIndex((item) => item.fileName === newFile.fileName);
-            if (ind === -1) {
-                let newAudio = new audioModel({ ...newFile, project: project._id });
-                newAudio.save();
-                existingAudioModels.push(newAudio);
-                existingAudioIds.push(newAudio._id);
-                count++;
+            if(newFile.fileName){
+                let ind = existingAudioModels.findIndex((item) => item.fileName === newFile.fileName);
+                if (ind === -1) {
+                    let newAudio = new audioModel({ ...newFile, project: project._id });
+                    newAudio.save();
+                    existingAudioModels.push(newAudio);
+                    existingAudioIds.push(newAudio._id);
+                    count++;
+                }
             }
         }
         await project.save();
