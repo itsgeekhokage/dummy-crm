@@ -15,11 +15,9 @@ const AdminPanel = () => {
 
   useEffect(() => {
     const storedUserData = JSON.parse(sessionStorage.getItem("crmLogin"));
-
-    if (!storedUserData || !storedUserData.admin) {
+    if (!storedUserData) {
       navigate("/");
     }
-
   }, []);
 
   return (
