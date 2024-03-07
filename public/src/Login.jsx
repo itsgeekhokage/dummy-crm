@@ -5,7 +5,7 @@ import { TextField, Button } from "@mui/material";
 import styled from "styled-components";
 import { signinLink } from "../api";
 import { useNavigate } from "react-router-dom";
-import {toast }from "react-toastify";
+import { toast } from "react-toastify";
 
 const Container = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ const StyledForm = styled.form`
   margin: auto;
   padding: 4rem 5rem;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  p{
+  p {
     color: red;
     text-align: center;
   }
@@ -49,10 +49,9 @@ const UserLogin = () => {
 
   const navigator = (data) => {
     sessionStorage.setItem("crmLogin", JSON.stringify(data));
-    if(data?.admin === true) navigate("/admin/allUser", {state : data})
+    navigate("/admin/allUser", { state: data });
     // else if(data?.admin === false) navigate("/home", {state : data});
-    else {data?.status === "Active" ? navigate("/home", {state : data}) : setErrorMessage("Seems like you are not allowed to access this database, try contacting the admin...")}
-  }
+  };
 
   function decodeJwt(token) {
     const base64Url = token.split(".")[1];
@@ -66,9 +65,8 @@ const UserLogin = () => {
         .join("")
     );
 
-    return JSON.parse(jsonPayload).user._doc;
+    return JSON.parse(jsonPayload);
   }
-
 
   const authChecker = () => {
     const postData = {
@@ -82,27 +80,27 @@ const UserLogin = () => {
       },
       body: JSON.stringify(postData),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        if(data.response === 202) {
+        console.log(data);
+        if (data.token) {
           let userToken = decodeJwt(data.token);
+          console.log(userToken, data.token);
           navigator(userToken);
-        }
-        else toast.error("Authentication failed, kindly enter correct userId or password");
+        } else
+          toast.error(
+            "Authentication failed, kindly enter correct userId or password"
+          );
       })
       .catch((error) => {
-       // console.error("Fetch error:", error);
+        // console.error("Fetch error:", error);
       });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(userName.length == 0 || password.length == 0) toast.warn("Fields cannot be kept empty...");
+    if (userName.length == 0 || password.length == 0)
+      toast.warn("Fields cannot be kept empty...");
     else authChecker();
   };
 
